@@ -5,7 +5,7 @@ class labyrinth():
     def __init__(self):
         self.drawer = turtle.Turtle()
         self.drawer.hideturtle()
-        self.drawer.speed(100)
+        self.drawer.speed(10**10)
 
         self.drawer.up()
         self.x0 = -200
@@ -13,13 +13,14 @@ class labyrinth():
         self.stepwidth = 50
         self.borderlength = 10
         self.margin = 1
+        self.besetzt = []
         self.border()
         self.gitter()
         self.beschriftungen()
 
     def setze(self, item, x, y):
         if item == "Stein":
-            self.stein(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth)
+            self.stein(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, x, y)
         elif item == "Start":
             self.end(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, "start")
         elif item == "Ziel":
@@ -27,7 +28,7 @@ class labyrinth():
         else:
             print("Dieses item gibt es nicht!")
 
-    def stein(self, x ,y):
+    def stein(self, x ,y, xx, yy):
         self.drawer.up()
         self.drawer.goto(x+self.margin, y+self.margin)
         self.drawer.down()
@@ -39,13 +40,15 @@ class labyrinth():
         self.drawer.goto(x + self.margin, y + self.margin)
         self.drawer.end_fill()
         self.drawer.up()
+        coords = [xx, yy]
+        self.besetzt.append(coords)
 
     def end(self, x ,y, type):
         if type == "start":
             self.drawer.color("red")
         else:
             self.drawer.color("gold")
-        self.drawer.goto(x, y)
+        self.drawer.goto(x + self.margin, y + self.margin)
         self.drawer.down()
         self.drawer.begin_fill()
         self.drawer.goto(x + self.stepwidth - self.margin, y +self.margin)
@@ -97,23 +100,79 @@ class player():
         self.schildie = turtle.Turtle()
         self.schildie.shape("turtle")
         self.schildie.up()
+        self.schildie.goto(25, 25)
+        self.x0 = -200
+        self.y0 = -200
         self.stepwidth = 50
+        self.richtung = 1
 
     def vor(self, steps):
-      self.schildie.forward(self.stepwidth*steps)
+        if self.vorne():
+            print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
+        else:
+            self.schildie.forward(self.stepwidth*steps)
 
-    def zurück(self, steps):
+    def zurueck(self, steps):
         self.schildie.backward(self.stepwidth*steps)
 
     def links(self):
         self.schildie.left(90)
+        self.richtung = self.aenderausrichtung("left", self.richtung)
 
     def rechts(self):
         self.schildie.right(90)
+        self.richtung = self.aenderausrichtung("right", self.richtung)
 
     def vorne(self):
-        vor = True
-        return vor
+        eigenfeld = self.getposition()
+        eigenX = eigenfeld[0]
+        eigenY = eigenfeld[1]
+
+        if self.richtung == 0: #oben
+            vorderX = eigenX
+            vorderY = eigenY + 1
+        elif self.richtung == 1: #rechts
+            vorderX = eigenX +1
+            vorderY = eigenY
+        elif self.richtung == 2: # unten
+            vorderX = eigenX
+            vorderY = eigenY - 1
+        elif self.richtung == 3: # links
+            vorderX = eigenX - 1
+            vorderY = eigenY
+        vorderCoords = [vorderX, vorderY]
+        return self.besetzt(vorderX, vorderY)
+
+    def besetzt(self, vorderX, vorderY):
+        for coordinate in laby.besetzt:
+            if vorderX == coordinate[0] and vorderY == coordinate[1]:
+                return True
+            else:
+                pass
+        return False
+
+    def getposition(self):
+        x = self.schildie.xcor()
+        y = self.schildie.ycor()
+        x -= self.stepwidth/2 # von mitte des Feldes zu Ursprung des Feldes zurück
+        y -= self.stepwidth/2 #-//-
+        x -= self.x0
+        y -= self.y0
+        x /= self.stepwidth
+        y /= self.stepwidth
+        return(x, y)
+
+
+    def aenderausrichtung(self, dir, richtung): # 0 = up, 1 = right, 2 = down, 3 = left
+        if dir == "left":
+            richtung -= 1
+        else:
+            richtung += 1
+        if richtung > 3:
+            richtung = 0
+        elif richtung < 0 :
+            richtung = 3
+        return richtung
 
 laby = labyrinth()
 spieler = player()
