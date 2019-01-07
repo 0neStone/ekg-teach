@@ -108,7 +108,7 @@ class player:
         self.endY = y1
         self.stepwidth = 50
         self.richtung = 1
-        self.sleeptime = 1
+        self.sleeptime = 0.2
 
     def geheZu(self, x, y):
         x *= laby.stepwidth
@@ -120,12 +120,12 @@ class player:
         self.schildie.goto(x, y)
 
     def vor(self, steps):
-        print(self.vorne("vor"))
         time.sleep(self.sleeptime)
         if self.vorne("vor"):
             print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
         else:
-            self.schildie.forward(self.stepwidth*steps)
+            for x in range(0, steps):
+                self.schildie.forward(self.stepwidth)
             turtle.update()
         if self.getposition() == [self.endX, self.endY]:
             print("Du hast es geschafft!")
@@ -135,7 +135,8 @@ class player:
         if self.vorne("rück"):
             print("Es liegt ein Stein hinter dir, du kannst da nicht hingehen")
         else:
-            self.schildie.backward(self.stepwidth*steps)
+            for x in range(0, steps):
+                self.schildie.backward(self.stepwidth)
             turtle.update()
 
     def links(self):
@@ -235,7 +236,7 @@ def beispiellabyrinth(id):
             laby.setze("Stein", x, 6)
         for x in range(2, laby.borderlength):
             laby.setze("Stein", x, 8)
-startX = 2
+startX = 1
 startY = 1
 endX = 1
 endY = 8
