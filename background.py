@@ -12,6 +12,7 @@ class labyrinth():
         self.y0 = -200
         self.stepwidth = 50
         self.borderlength = 10
+        self.margin = 1
         self.border()
         self.gitter()
         self.beschriftungen()
@@ -20,44 +21,36 @@ class labyrinth():
         if item == "Stein":
             self.stein(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth)
         elif item == "Start":
-            self.start(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth)
+            self.end(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, "start")
         elif item == "Ziel":
-            self.ziel(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth)
+            self.end(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, "ziel")
         else:
             print("Dieses item gibt es nicht!")
 
     def stein(self, x ,y):
         self.drawer.up()
-        self.drawer.goto(x, y)
+        self.drawer.goto(x+self.margin, y+self.margin)
         self.drawer.down()
         self.drawer.begin_fill()
         self.drawer.color("grey")
-        self.drawer.goto(x + self.stepwidth, y)
-        self.drawer.goto(x + self.stepwidth, y + self.stepwidth)
-        self.drawer.goto(x, y + self.stepwidth)
-        self.drawer.goto(x, y)
+        self.drawer.goto(x + self.stepwidth-self.margin, y+self.margin)
+        self.drawer.goto(x + self.stepwidth-self.margin, y + self.stepwidth-self.margin)
+        self.drawer.goto(x+ self.margin, y + self.stepwidth - self.margin)
+        self.drawer.goto(x + self.margin, y + self.margin)
         self.drawer.end_fill()
         self.drawer.up()
 
-    def start(self, x ,y):
+    def end(self, x ,y, type):
+        if type == "start":
+            self.drawer.color("red")
+        else:
+            self.drawer.color("gold")
         self.drawer.goto(x, y)
         self.drawer.down()
         self.drawer.begin_fill()
-        self.drawer.color("red")
-        self.drawer.goto(x + self.stepwidth, y)
-        self.drawer.goto(x + self.stepwidth/2, y+self.stepwidth)
-        self.drawer.goto(x, y)
-        self.drawer.end_fill()
-        self.drawer.up()
-
-    def ziel(self, x ,y):
-        self.drawer.goto(x, y)
-        self.drawer.down()
-        self.drawer.begin_fill()
-        self.drawer.color("gold")
-        self.drawer.goto(x + self.stepwidth, y)
-        self.drawer.goto(x + self.stepwidth/2, y+self.stepwidth)
-        self.drawer.goto(x, y)
+        self.drawer.goto(x + self.stepwidth - self.margin, y +self.margin)
+        self.drawer.goto(x + self.stepwidth/2, y+self.stepwidth - self.margin)
+        self.drawer.goto(x + self.margin, y + self.margin)
         self.drawer.end_fill()
         self.drawer.up()
 
@@ -124,7 +117,3 @@ class player():
 
 laby = labyrinth()
 spieler = player()
-laby.setze("Stein", 0, 0)
-laby.setze("Ziel", 3, 3)
-laby.setze("Start", 5, 8)
-input()
