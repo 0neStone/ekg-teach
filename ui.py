@@ -1,5 +1,4 @@
 from background import laby, spieler
-from foreground import *
 import turtle
 
 class UI:
@@ -41,23 +40,42 @@ class UI:
         self.rechts.turtlesize(2)
         self.speed(x+100, y)
 
-        '''self.vor.onclick(self.test())
-        self.rueck.onclick(spieler.zurueck(1))
-        self.links.onclick(spieler.links())
-        self.rechts.onclick(spieler.rechts())
-        self.plus0.onclick(spieler.increaseSpeed())
-        self.plus1.onclick(spieler.increaseSpeed())
-        self.plus2.onclick(spieler.increaseSpeed())
-        self.plus3.onclick(spieler.increaseSpeed())
-        self.plus4.onclick(spieler.increaseSpeed())
-        self.minus0.onclick(spieler.decreaseSpeed())
-        self.minus1.onclick(spieler.decreaseSpeed())
-        self.minus2 .onclick(spieler.decreaseSpeed())'''
+        self.vor.onclick(self.eventVor)
+        self.rueck.onclick(self.eventZurueck)
+        self.links.onclick(self.eventLinks)
+        self.rechts.onclick(self.eventRechts)
+        self.plus0.onclick(self.eventIncreaseSpeed)
+        self.plus1.onclick(self.eventIncreaseSpeed)
+        self.plus2.onclick(self.eventIncreaseSpeed)
+        self.plus3.onclick(self.eventIncreaseSpeed)
+        self.plus4.onclick(self.eventIncreaseSpeed)
+        self.minus0.onclick(self.eventIncreaseSpeed)
+        self.minus1.onclick(self.eventDecreaseSpeed)
+        self.minus2.onclick(self.eventDecreaseSpeed)
 
-        turtle.update()
+        while True:
+            turtle.update()
 
-    def test(self):
-        print("Test")
+    def eventVor(self, a, b):
+        spieler.vor(1)
+
+    def eventZurueck(self, a, b):
+        spieler.zurueck(1)
+
+    def eventLinks(self, a, b):
+        spieler.links()
+
+    def eventRechts(self, a, b):
+        spieler.rechts()
+
+    def eventIncreaseSpeed(self, a, b):
+        spieler.increaseSpeed()
+
+    def eventDecreaseSpeed(self, a, b):
+        spieler.decreaseSpeed()
+
+    def init():
+        pass
 
     def speed(self, x, y):
         laby.drawer.goto(x-170, y-60)
@@ -97,6 +115,5 @@ class UI:
         self.minus1.forward(10)
         self.minus2.backward(10)
 
-
-UI(0, -300)
-input()
+if __name__ == "__main__":
+    gui = UI(0, -300)

@@ -229,7 +229,9 @@ class player:
         return False
 
     def ende(self):
-        input()
+        while True:
+            self.sleeptime = 0.5
+            self.links()
 
     def getposition(self):
         x = self.schildie.xcor()

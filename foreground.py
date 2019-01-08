@@ -1,6 +1,5 @@
 from background import *
-import ui
-import turtle
+from ui import UI
 
 beispiellabyrinth(1)
 while True:
