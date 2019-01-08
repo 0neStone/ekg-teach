@@ -1,10 +1,13 @@
 import turtle
 import time
+import pygame
+import random
 
 class labyrinth:
     def __init__(self):
         self.drawer = turtle.Turtle()
         self.drawer.hideturtle()
+        self.drawer.speed(10)
         turtle.tracer(0, 0)
 
         self.drawer.up()
@@ -108,7 +111,7 @@ class player:
         self.endY = y1
         self.stepwidth = 50
         self.richtung = 1
-        self.sleeptime = 0.2
+        self.sleeptime = 0.01
 
     def geheZu(self, x, y):
         x *= laby.stepwidth
@@ -120,8 +123,11 @@ class player:
         self.schildie.goto(x, y)
 
     def vor(self, steps):
+        if self.getposition()[0] == self.endX and self.getposition()[1] == self.endY:
+            print("Sie haben ihr Ziel erreicht! Das Ziel liegt auf der", "rechten" if random.randint(0,1)==0 else "linken","Seite")
+            self.ende()
         time.sleep(self.sleeptime)
-        if self.vorne("vor"):
+        if self.hindernisserkennung("vorne"):
             print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
         else:
             for x in range(0, steps):
@@ -132,7 +138,7 @@ class player:
 
     def zurueck(self, steps):
         time.sleep(self.sleeptime)
-        if self.vorne("rück"):
+        if self.hindernisserkennung("hinten"):
             print("Es liegt ein Stein hinter dir, du kannst da nicht hingehen")
         else:
             for x in range(0, steps):
@@ -151,13 +157,13 @@ class player:
         self.richtung = self.aenderausrichtung("right", self.richtung)
         turtle.update()
 
-    def vorne(self, dir):
+    def hindernisserkennung(self, dir):
         time.sleep(self.sleeptime)
         eigenfeld = self.getposition()
         eigenX = eigenfeld[0]
         eigenY = eigenfeld[1]
 
-        if dir == "vor":
+        if dir == "vorne":
             if self.richtung == 0: #oben
                 vorderX = eigenX
                 vorderY = eigenY + 1
@@ -170,7 +176,7 @@ class player:
             elif self.richtung == 3: # links
                 vorderX = eigenX - 1
                 vorderY = eigenY
-        else:
+        elif dir=="hinten":
             if self.richtung == 0: #oben
                 vorderX = eigenX
                 vorderY = eigenY - 1
@@ -183,8 +189,35 @@ class player:
             elif self.richtung == 3: # links
                 vorderX = eigenX +1
                 vorderY = eigenY
+        elif dir=="links":
+            if self.richtung == 0: #oben
+                vorderX = eigenX -1
+                vorderY = eigenY
+            elif self.richtung == 1: #rechts
+                vorderX = eigenX
+                vorderY = eigenY + 1
+            elif self.richtung == 2: # unten
+                vorderX = eigenX + 1
+                vorderY = eigenY
+            elif self.richtung == 3: # links
+                vorderX = eigenX
+                vorderY = eigenY - 1
+        elif dir=="rechts":
+            if self.richtung == 0: #oben
+                vorderX = eigenX + 1
+                vorderY = eigenY
+            elif self.richtung == 1: #rechts
+                vorderX = eigenX
+                vorderY = eigenY - 1
+            elif self.richtung == 2: # unten
+                vorderX = eigenX  - 1
+                vorderY = eigenY
+            elif self.richtung == 3: # links
+                vorderX = eigenX
+                vorderY = eigenY + 1
 
         vorderCoords = [vorderX, vorderY]
+        self.schildie.goto(round(self.schildie.xcor(), 1), round(self.schildie.ycor(), 1))
         return self.besetzt(vorderX, vorderY)
 
     def besetzt(self, vorderX, vorderY):
@@ -194,6 +227,9 @@ class player:
             else:
                 pass
         return False
+
+    def ende(self):
+        input()
 
     def getposition(self):
         x = self.schildie.xcor()
@@ -217,6 +253,12 @@ class player:
         elif richtung < 0 :
             richtung = 3
         return richtung
+
+    def increaseSpeed(self):
+        self.sleeptime += 0.01
+
+    def decreaseSpeed(self):
+        self.sleeptime -= 0.01
 
 def beispiellabyrinth(id):
     if id==1:
@@ -242,3 +284,6 @@ endX = 1
 endY = 8
 laby = labyrinth()
 spieler = player(startX, startY, endX, endY)
+
+#if pygame.mouse.get_pressed()[0] and sprite_rect.collidepoint(pygame.mouse.get_pos()):
+    #pygame.mouse.get_pos()
