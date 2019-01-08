@@ -53,9 +53,6 @@ class UI:
         self.minus1.onclick(self.eventDecreaseSpeed)
         self.minus2.onclick(self.eventDecreaseSpeed)
 
-        while True:
-            turtle.update()
-
     def eventVor(self, a, b):
         spieler.vor(1)
 

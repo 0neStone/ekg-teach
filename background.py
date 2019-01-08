@@ -1,6 +1,6 @@
 import turtle
 import time
-import pygame
+#import pygame
 import random
 
 class labyrinth:
@@ -111,7 +111,7 @@ class player:
         self.endY = y1
         self.stepwidth = 50
         self.richtung = 1
-        self.sleeptime = 0.01
+        self.sleeptime = 0.1
 
     def geheZu(self, x, y):
         x *= laby.stepwidth
@@ -257,10 +257,10 @@ class player:
         return richtung
 
     def increaseSpeed(self):
-        self.sleeptime += 0.01
+        self.sleeptime -= 0.01
 
     def decreaseSpeed(self):
-        self.sleeptime -= 0.01
+        self.sleeptime += 0.01
 
 def beispiellabyrinth(id):
     if id==1:
