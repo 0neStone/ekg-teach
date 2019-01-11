@@ -1,8 +1,11 @@
 from background import laby, spieler
 import turtle
+import editor
 
 class UI:
     def __init__(self, x, y):
+        self.x = x
+        self.y = y
         self.vor = turtle.Turtle()
         self.rueck = turtle.Turtle()
         self.links = turtle.Turtle()
@@ -15,6 +18,11 @@ class UI:
         self.minus0 = turtle.Turtle()
         self.minus1 = turtle.Turtle()
         self.minus2 = turtle.Turtle()
+        self.pause0 = turtle.Turtle()
+        self.pause1 = turtle.Turtle()
+        self.pause2 = turtle.Turtle()
+        self.play = turtle.Turtle()
+        self.play.hideturtle()
         self.vor.shape("arrow")
         self.rueck.shape("arrow")
         self.links.shape("arrow")
@@ -23,10 +31,10 @@ class UI:
         self.rueck.up()
         self.links.up()
         self.rechts.up()
-        self.vor.goto(x ,y)
-        self.rueck.goto(x ,y)
-        self.links.goto(x ,y)
-        self.rechts.goto(x ,y)
+        self.vor.goto(self.x ,self.y)
+        self.rueck.goto(self.x ,self.y)
+        self.links.goto(self.x ,self.y)
+        self.rechts.goto(self.x ,self.y)
         self.vor.left(90)
         self.rueck.left(270)
         self.links.left(180)
@@ -38,7 +46,10 @@ class UI:
         self.rueck.turtlesize(2)
         self.links.turtlesize(2)
         self.rechts.turtlesize(2)
-        self.speed(x+100, y)
+        self.speed(self.x+100, self.y)
+        self.pause(self.x+170, self.y)
+        self.go()
+        self.paused = False
 
         self.vor.onclick(self.eventVor)
         self.rueck.onclick(self.eventZurueck)
@@ -71,12 +82,61 @@ class UI:
     def eventDecreaseSpeed(self, a, b):
         spieler.decreaseSpeed()
 
-    def init():
-        pass
+    def stop(self, a, b):
+        self.paused = True
+        self.switchPause()
+        laby.pause(True)
+
+    def goOn(self, a, b):
+        self.paused = False
+        self.switchPause()
+        laby.pause(False)
+
+    def switchPause(self):
+        if self.paused:
+            self.play.showturtle()
+            self.pause0.hideturtle()
+            self.pause1.hideturtle()
+            self.pause2.hideturtle()
+            turtle.update()
+        else:
+            self.play.hideturtle()
+            self.pause0.showturtle()
+            self.pause1.showturtle()
+            self.pause2.showturtle()
+            turtle.update()
+
+    def go(self):
+        self.play.up()
+        self.play.shape("arrow")
+        self.play.turtlesize(2, 3)
+        self.play.goto(self.x+170, self.y)
+        self.play.onclick(self.goOn)
+
+    def pause(self, x, y):
+        self.pause0.up()
+        self.pause0.shape("square")
+        self.pause0.turtlesize(0.5, 2)
+        self.pause0.left(90)
+        self.pause0.goto(x, y)
+        self.pause1.up()
+        self.pause1.shape("square")
+        self.pause1.color("white")
+        self.pause1.turtlesize(0.5, 2)
+        self.pause1.left(90)
+        self.pause1.goto(x+15, y)
+        self.pause2.up()
+        self.pause2.shape("square")
+        self.pause2.turtlesize(0.5, 2)
+        self.pause2.left(90)
+        self.pause2.goto(x+20, y)
+        self.pause0.onclick(self.stop)
+        self.pause1.onclick(self.stop)
+        self.pause2.onclick(self.stop)
 
     def speed(self, x, y):
-        laby.drawer.goto(x-170, y-60)
-        laby.drawer.write("Steure die Turtle und verändere ihre Geschwindigkeit", font=("TimesNewRoman, 10"))
+        laby.drawer.goto(x-160, y-70)
+        laby.drawer.write("Steure die Turtle und\nverändere ihre Geschwindigkeit", font=("TimesNewRoman, 10"))
         self.plus0.shape("square")
         self.plus1.shape("square")
         self.plus2.shape("square")
@@ -112,5 +172,4 @@ class UI:
         self.minus1.forward(10)
         self.minus2.backward(10)
 
-if __name__ == "__main__":
-    gui = UI(0, -300)
+gui = UI(100, -300)

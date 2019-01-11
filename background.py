@@ -1,7 +1,7 @@
 import turtle
 import time
-#import pygame
 import random
+import numpy
 
 class labyrinth:
     def __init__(self):
@@ -17,6 +17,25 @@ class labyrinth:
         self.borderlength = 10
         self.margin = 1
         self.besetzt = []
+
+        self.startSet = False
+        self.startCoords = []
+        self.endSet = False
+        self.endCoords = []
+
+        self.paused = False
+
+        try: # loading saved maze
+            besetzt = numpy.load("data/mazes.npy")
+            startCoords = numpy.load("data/start.npy")
+            endCoords = numpy.load("data/end.npy")
+            for coord in besetzt:
+                self.setze("Stein", coord[0], coord[1])
+            self.setze("Start", startCoords[0], startCoords[1])
+            self.setze("Ziel", endCoords[0], endCoords[1])
+        except:
+            beispiellabyrinth(1)
+
         self.border()
         self.gitter()
         self.beschriftungen()
@@ -25,9 +44,9 @@ class labyrinth:
         if item == "Stein":
             self.stein(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, x, y)
         elif item == "Start":
-            self.end(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, "start")
+            self.end(x, y, "start")
         elif item == "Ziel":
-            self.end(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, "ziel")
+            self.end(x, y, "ziel")
         else:
             print("Dieses item gibt es nicht!")
         turtle.update()
@@ -47,12 +66,58 @@ class labyrinth:
         coords = [xx, yy]
         self.besetzt.append(coords)
 
+    def square(self, x, y, color,fill = False):
+        x = self.x0 + x*self.stepwidth
+        y = self.y0 + y*self.stepwidth
+        self.drawer.up()
+        self.drawer.goto(x+self.margin, y+self.margin)
+        self.drawer.down()
+        self.drawer.color(color)
+        if fill == True:
+            self.drawer.fillcolor(color)
+            self.drawer.begin_fill()
+        self.drawer.goto(x + self.stepwidth-self.margin, y+self.margin)
+        self.drawer.goto(x + self.stepwidth-self.margin, y + self.stepwidth-self.margin)
+        self.drawer.goto(x+ self.margin, y + self.stepwidth - self.margin)
+        self.drawer.goto(x + self.margin, y + self.margin)
+        self.drawer.up()
+        if fill == True:
+            self.drawer.end_fill()
+        coords = [x, y]
+        if color == "white":
+            if coords in self.besetzt:
+                self.besetzt.remove(coords)
+        else:
+            self.besetzt.append(coords)
+
+    def geheZu(self, x, y):
+        x *= self.stepwidth
+        y *= self.stepwidth
+        x += self.stepwidth/2
+        y += self.stepwidth/2
+        x += self.x0
+        y += self.y0
+        self.drawer.goto(x, y)
+
     def end(self, x ,y, type):
         if type == "start":
+            if self.startSet:
+                self.square(self.startCoords[0], self.startCoords[1], "white", True)
+                self.square(x, y, "white", True)
             self.drawer.color("red")
-        else:
+            self.startSet = True
+            self.startCoords = [x, y]
+        elif type == "ziel":
+            if self.endSet:
+                self.square(self.endCoords[0], self.endCoords[1], "white", True)
+                self.square(x, y, "white", True)
             self.drawer.color("gold")
-        self.drawer.goto(x + self.margin, y + self.margin)
+            self.endSet = True
+            self.endCoords = [x, y]
+        x = self.x0 + x*self.stepwidth
+        y = self.y0 + y*self.stepwidth
+        self.drawer.up()
+        self.drawer.goto(x+self.margin, y+self.margin)
         self.drawer.down()
         self.drawer.begin_fill()
         self.drawer.goto(x + self.stepwidth - self.margin, y +self.margin)
@@ -60,6 +125,17 @@ class labyrinth:
         self.drawer.goto(x + self.margin, y + self.margin)
         self.drawer.end_fill()
         self.drawer.up()
+
+    def erase(self, coords):
+        self.geheZu(coords[0], coords[1])
+        self.drawer.color("white")
+        self.drawer.begin_fill()
+        self.drawer.goto(coords[0] + self.stepwidth - self.margin, coords[1] +self.margin)
+        self.drawer.goto(coords[0] + self.stepwidth/2, coords[1]+self.stepwidth - self.margin)
+        self.drawer.goto(coords[0] + self.margin, coords[1] + self.margin)
+        self.drawer.end_fill()
+        self.drawer.up()
+
 
     def border(self):
         self.drawer.goto(self.x0, self.y0)
@@ -99,6 +175,22 @@ class labyrinth:
             self.drawer.write(y, font=("Arial", 10))
         self.drawer.up()
 
+    def saveMaze(self, x, y):
+        print("Labyrinth gespeichert")
+        numpy.save("data/mazes.npy", laby.besetzt)
+        numpy.save("data/start.npy", laby.startCoords)
+        numpy.save("data/end.npy", laby.endCoords)
+
+    def pause(self, pause):
+        if pause:
+            turtle.mainloop()
+            self.paused = True
+            print("Pause")
+        else:
+            turtle.update()
+            self.paused = False
+            print("Weiter")
+
 class player:
     def __init__(self, x0, y0, x1, y1):
         self.schildie = turtle.Turtle()
@@ -123,18 +215,23 @@ class player:
         self.schildie.goto(x, y)
 
     def vor(self, steps):
-        if self.getposition()[0] == self.endX and self.getposition()[1] == self.endY:
-            print("Sie haben ihr Ziel erreicht! Das Ziel liegt auf der", "rechten" if random.randint(0,1)==0 else "linken","Seite")
-            self.ende()
-        time.sleep(self.sleeptime)
-        if self.hindernisserkennung("vorne"):
-            print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
+        posX, posY = self.getposition()
+        vorderCoords = self.vorderCoord(posX, posY, "vorne")
+        x = vorderCoords[0]
+        y = vorderCoords[1]
+        if x>=0 and x<=laby.borderlength-1 and y>=0 and y<=laby.borderlength-1:
+            if self.getposition()[0] == self.endX and self.getposition()[1] == self.endY:
+                print("Sie haben ihr Ziel erreicht! Das Ziel liegt auf der", "rechten" if random.randint(0,1)==0 else "linken","Seite")
+                self.ende()
+            time.sleep(self.sleeptime)
+            if self.hindernisserkennung("vorne"):
+                print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
+            else:
+                for x in range(0, steps):
+                    self.schildie.forward(self.stepwidth)
+                turtle.update()
         else:
-            for x in range(0, steps):
-                self.schildie.forward(self.stepwidth)
-            turtle.update()
-        if self.getposition() == [self.endX, self.endY]:
-            print("Du hast es geschafft!")
+            return
 
     def zurueck(self, steps):
         time.sleep(self.sleeptime)
@@ -157,12 +254,7 @@ class player:
         self.richtung = self.aenderausrichtung("right", self.richtung)
         turtle.update()
 
-    def hindernisserkennung(self, dir):
-        time.sleep(self.sleeptime)
-        eigenfeld = self.getposition()
-        eigenX = eigenfeld[0]
-        eigenY = eigenfeld[1]
-
+    def vorderCoord(self, eigenX, eigenY, dir):
         if dir == "vorne":
             if self.richtung == 0: #oben
                 vorderX = eigenX
@@ -215,10 +307,21 @@ class player:
             elif self.richtung == 3: # links
                 vorderX = eigenX
                 vorderY = eigenY + 1
+        return [vorderX, vorderY]
 
-        vorderCoords = [vorderX, vorderY]
-        self.schildie.goto(round(self.schildie.xcor(), 1), round(self.schildie.ycor(), 1))
-        return self.besetzt(vorderX, vorderY)
+    def hindernisserkennung(self, dir):
+        time.sleep(self.sleeptime)
+        eigenfeld = self.getposition()
+        eigenX = eigenfeld[0]
+        eigenY = eigenfeld[1]
+        vorderCoords = self.vorderCoord(eigenX, eigenY, dir)
+        x = vorderCoords[0]
+        y = vorderCoords[1]
+        if x>=0 and x<=laby.borderlength-1 and y>=0 and y<=laby.borderlength-1:
+            self.schildie.goto(round(self.schildie.xcor(), 1), round(self.schildie.ycor(), 1))
+            return self.besetzt(vorderCoords[0], vorderCoords[1])
+        else:
+            return True
 
     def besetzt(self, vorderX, vorderY):
         for coordinate in laby.besetzt:
@@ -257,7 +360,8 @@ class player:
         return richtung
 
     def increaseSpeed(self):
-        self.sleeptime -= 0.01
+        if self.sleeptime > 0.01:
+            self.sleeptime -= 0.01
 
     def decreaseSpeed(self):
         self.sleeptime += 0.01
@@ -280,12 +384,12 @@ def beispiellabyrinth(id):
             laby.setze("Stein", x, 6)
         for x in range(2, laby.borderlength):
             laby.setze("Stein", x, 8)
+
+
+
 startX = 1
 startY = 1
 endX = 1
 endY = 8
 laby = labyrinth()
 spieler = player(startX, startY, endX, endY)
-
-#if pygame.mouse.get_pressed()[0] and sprite_rect.collidepoint(pygame.mouse.get_pos()):
-    #pygame.mouse.get_pos()
