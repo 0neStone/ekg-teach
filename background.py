@@ -183,11 +183,9 @@ class labyrinth:
 
     def pause(self, pause):
         if pause:
-            turtle.mainloop()
             self.paused = True
             print("Pause")
         else:
-            turtle.update()
             self.paused = False
             print("Weiter")
 
