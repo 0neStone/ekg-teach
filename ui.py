@@ -85,12 +85,12 @@ class UI:
     def stop(self, a, b):
         self.paused = True
         self.switchPause()
-        laby.pause(True)
+        laby.paused = True
 
     def goOn(self, a, b):
         self.paused = False
         self.switchPause()
-        laby.pause(False)
+        laby.paused = False
 
     def switchPause(self):
         if self.paused:
@@ -136,7 +136,6 @@ class UI:
 
     def speed(self, x, y):
         laby.drawer.goto(x-160, y-70)
-        laby.drawer.write("Steure die Turtle und\nverändere ihre Geschwindigkeit", font=("TimesNewRoman, 10"))
         self.plus0.shape("square")
         self.plus1.shape("square")
         self.plus2.shape("square")

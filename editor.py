@@ -17,11 +17,12 @@ def erase(x, y):
         print("Bitte wähle ein oder mehrere Felder aus")
         return
     for i in range(0, len(selected)):
-        laby.square(selected[i][0], selected[i][1],"white",True)
         try:
             laby.besetzt.remove([selected[i][0], selected[i][1]])
         except ValueError:
             pass
+        laby.square(selected[i][0], selected[i][1],"white",True)
+
     selected = []
 def select(x, y):
     x = int((x-spieler.x0)/spieler.stepwidth)
@@ -81,12 +82,29 @@ xWhite = x0;yWhite = y0-50
 xStart = x0+50;yStart = y0
 xEnd = x0+50;yEnd = y0-50
 
+def moveTurtle(x, y):
+    global selected
+    if len(selected) == 0:
+        print("Bitte wähle genau ein Feld aus")
+        return
+    elif len(selected) > 1:
+        print("Es kann nur einen Start geben")
+        return
+    x = selected[0][0]
+    y = selected[0][1]
+    spieler.geheZu(x, y)
+    erase(x, y)
+    selected = []
+
 finish = turtle.Turtle();finish.up();finish.shape("triangle");finish.goto(xEnd,yEnd);finish.onclick(set_finish);finish.left(90);finish.color("gold")
 start = turtle.Turtle();start.up();start.shape("triangle");start.goto(xStart,yStart);start.onclick(set_start);start.left(90);start.color("red")
 black = turtle.Turtle();black.up();black.shape("square");black.goto(xBlack,yBlack);black.onclick(fill_black)
 whiteBorder(xWhite, yWhite)
 white = turtle.Turtle();white.up();white.shape("square");white.goto(xWhite,yWhite);white.onclick(erase);white.color("white")
+fakeTurtle = turtle.Turtle();fakeTurtle.up();fakeTurtle.shape("turtle");fakeTurtle.goto(x0-50,y0-50);fakeTurtle.onclick(moveTurtle)
 
-save = turtle.Turtle();save.up();save.shape("square");save.goto(x0 - 50, y0);save.onclick(laby.saveMaze)
+save = turtle.Turtle();save.up();save.right(90);save.goto(x0 - 50, y0);save.onclick(laby.saveMaze);save.pensize(3)
+save.goto(x0-60, y0-7);save.down();save.forward(2);save.left(90);save.forward(20); save.left(90);save.forward(2);save.up();save.goto(x0-50, y0);save.left(180);save.turtlesize(1.5, 1.5)
+
 
 coords = turtle.onscreenclick(select)

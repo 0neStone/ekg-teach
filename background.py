@@ -2,6 +2,7 @@ import turtle
 import time
 import random
 import numpy
+import csv
 
 class labyrinth:
     def __init__(self):
@@ -17,24 +18,30 @@ class labyrinth:
         self.borderlength = 10
         self.margin = 1
         self.besetzt = []
-
         self.startSet = False
         self.startCoords = []
         self.endSet = False
         self.endCoords = []
-
         self.paused = False
 
         try: # loading saved maze
-            besetzt = numpy.load("data/mazes.npy")
-            startCoords = numpy.load("data/start.npy")
-            endCoords = numpy.load("data/end.npy")
-            for coord in besetzt:
-                self.setze("Stein", coord[0], coord[1])
-            self.setze("Start", startCoords[0], startCoords[1])
-            self.setze("Ziel", endCoords[0], endCoords[1])
+            with open('data/besetzt.txt', 'r') as besetzt:
+                lines = besetzt.readlines()
+                for coord in lines:
+                    coord = coord.split(";")
+                    self.setze("Stein", int(coord[0]), int(coord[1]))
+            with open('data/start.txt', 'r') as start:
+                lines = start.readlines()
+                for coord in lines:
+                    coord = coord.split(";")
+                    self.setze("Start", int(coord[0]), int(coord[1]))
+            with open('data/end.txt', 'r') as end:
+                lines = end.readlines()
+                for coord in lines:
+                    coord = coord.split(";")
+                    self.setze("Ziel", int(coord[0]), int(coord[1]))
         except:
-            beispiellabyrinth(1)
+            pass
 
         self.border()
         self.gitter()
@@ -42,7 +49,7 @@ class labyrinth:
 
     def setze(self, item, x, y):
         if item == "Stein":
-            self.stein(self.x0 + x*self.stepwidth, self.y0 + y*self.stepwidth, x, y)
+            self.stein(x, y)
         elif item == "Start":
             self.end(x, y, "start")
         elif item == "Ziel":
@@ -51,7 +58,10 @@ class labyrinth:
             print("Dieses item gibt es nicht!")
         turtle.update()
 
-    def stein(self, x ,y, xx, yy):
+    def stein(self, x ,y):
+        self.besetzt.append([x,y])
+        x = self.x0 + x*self.stepwidth
+        y = self.y0 + y*self.stepwidth
         self.drawer.up()
         self.drawer.goto(x+self.margin, y+self.margin)
         self.drawer.down()
@@ -63,8 +73,6 @@ class labyrinth:
         self.drawer.goto(x + self.margin, y + self.margin)
         self.drawer.end_fill()
         self.drawer.up()
-        coords = [xx, yy]
-        self.besetzt.append(coords)
 
     def square(self, x, y, color,fill = False):
         x = self.x0 + x*self.stepwidth
@@ -177,17 +185,21 @@ class labyrinth:
 
     def saveMaze(self, x, y):
         print("Labyrinth gespeichert")
-        numpy.save("data/mazes.npy", laby.besetzt)
-        numpy.save("data/start.npy", laby.startCoords)
-        numpy.save("data/end.npy", laby.endCoords)
+        print(self.besetzt)
+        with open("data/besetzt.txt", "w") as besetzt_file:
+            for i in range(0,len(laby.besetzt)):
+                besetzt_file.write(str(laby.besetzt[i][0]) + ";" + str(laby.besetzt[i][1])+ "\n")
+        with open("data/start.txt", "w") as start_file:
+            try:
+                start_file.write(str(laby.startCoords[0]) + ";" + str(laby.startCoords[1])+ "\n")
+            except IndexError:
+                pass
+        with open("data/end.txt","w") as end_file:
+            try:
+                end_file.write(str(laby.endCoords[0]) + ";" + str(laby.endCoords[1])+ "\n")
+            except IndexError:
+                pass
 
-    def pause(self, pause):
-        if pause:
-            self.paused = True
-            print("Pause")
-        else:
-            self.paused = False
-            print("Weiter")
 
 class player:
     def __init__(self, x0, y0, x1, y1):
