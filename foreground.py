@@ -1,18 +1,17 @@
 from background import *
-import ui
 
 # Todo: Befehle über Input eingeben
-while True:
-    turtle.update()
-    if not laby.paused:
-        if spieler.hinderniserkennung("links"):
-            if spieler.hinderniserkennung("rechts"):
-                if spieler.hinderniserkennung("vorne"):
-                    spieler.rechts()
-                    spieler.rechts()
-                spieler.vor(1)
-            else:
-                spieler.rechts()
-        else:
-            spieler.links()
-            spieler.vor(1)
+
+
+def laufe():
+    if not spieler.hinderniserkennung("links"):
+        spieler.links()
+        spieler.vor()
+    elif not spieler.hinderniserkennung("vorne"):
+        spieler.vor()
+    elif not spieler.hinderniserkennung("rechts"):
+        spieler.rechts()
+        spieler.vor()
+    else:
+        spieler.umdrehen()
+        spieler.vor()

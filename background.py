@@ -39,7 +39,7 @@ class labyrinth:
                     coord = coord.split(";")
                     self.setze("Ziel", int(coord[0]), int(coord[1]))
         except:
-            beispiellabyrinth(1)
+            self.beispiellabyrinth(1)
 
         self.border()
         self.gitter()
@@ -183,7 +183,6 @@ class labyrinth:
 
     def saveMaze(self, x, y):
         print("Labyrinth gespeichert")
-        print(self.besetzt)
         with open("data/besetzt.txt", "w") as besetzt_file:
             for i in range(0,len(laby.besetzt)):
                 besetzt_file.write(str(laby.besetzt[i][0]) + ";" + str(laby.besetzt[i][1])+ "\n")
@@ -198,17 +197,36 @@ class labyrinth:
             except IndexError:
                 pass
 
+    def beispiellabyrinth(self, id):
+        if id==1:
+            for x in range(0, self.borderlength):
+                self.setze("Stein", x, 0)
+                self.setze("Stein", x, self.borderlength-1)
+            for y in range(0, self.borderlength):
+                self.setze("Stein", 0, y)
+                self.setze("Stein", self.borderlength-1, y)
+            self.setze("Ziel", 8, 8)
+            self.setze("Start", 1, 1)
+            for x in range(0, self.borderlength-2):
+                self.setze("Stein", x, 2)
+            for x in range(2, self.borderlength):
+                self.setze("Stein", x, 4)
+            for x in range(0, self.borderlength-2):
+                self.setze("Stein", x, 6)
+            for x in range(2, self.borderlength):
+                self.setze("Stein", x, 8)
 
-class player:
-    def __init__(self, x0, y0, x1, y1):
+
+class player():
+    def __init__(self):
         self.schildie = turtle.Turtle()
         self.schildie.shape("turtle")
         self.schildie.up()
-        self.geheZu(x0, y0)
+        self.geheZu(laby.startCoords[0], laby.startCoords[1])
         self.x0 = -200
         self.y0 = -200
-        self.endX = x1
-        self.endY = y1
+        self.endX = laby.endCoords[0]
+        self.endY = laby.endCoords[1]
         self.stepwidth = 50
         self.richtung = 1
         self.sleeptime = 0.1
@@ -222,7 +240,7 @@ class player:
         y += laby.y0
         self.schildie.goto(x, y)
 
-    def vor(self, steps):
+    def vor(self, steps=1):
         posX, posY = self.getposition()
         vorderCoords = self.vorderCoord(posX, posY, "vorne")
         x = vorderCoords[0]
@@ -263,6 +281,11 @@ class player:
         self.schildie.right(90)
         self.richtung = self.aenderausrichtung("right", self.richtung)
         turtle.update()
+
+    def umdrehen(self):
+        self.rechts()
+        self.rechts()
+        turtle.update
 
     def vorderCoord(self, eigenX, eigenY, dir):
         if dir == "vorne":
@@ -317,6 +340,8 @@ class player:
             elif self.richtung == 3: # links
                 vorderX = eigenX
                 vorderY = eigenY + 1
+        else:
+            return [0, 0]
         return [vorderX, vorderY]
 
     def hinderniserkennung(self, dir):
@@ -375,30 +400,9 @@ class player:
     def decreaseSpeed(self):
         self.sleeptime += 0.01
 
-def beispiellabyrinth(id):
-    if id==1:
-        for x in range(0, laby.borderlength):
-            laby.setze("Stein", x, 0)
-            laby.setze("Stein", x, laby.borderlength-1)
-        for y in range(0, laby.borderlength):
-            laby.setze("Stein", 0, y)
-            laby.setze("Stein", laby.borderlength-1, y)
-        laby.setze("Ziel", endX, endY)
-        laby.setze("Start", startX, startY)
-        for x in range(0, laby.borderlength-2):
-            laby.setze("Stein", x, 2)
-        for x in range(2, laby.borderlength):
-            laby.setze("Stein", x, 4)
-        for x in range(0, laby.borderlength-2):
-            laby.setze("Stein", x, 6)
-        for x in range(2, laby.borderlength):
-            laby.setze("Stein", x, 8)
 
 
 
-startX = 1
-startY = 1
-endX = 1
-endY = 8
+
 laby = labyrinth()
-spieler = player(startX, startY, endX, endY)
+spieler = player()

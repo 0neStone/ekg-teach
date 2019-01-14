@@ -1,6 +1,7 @@
 from background import laby, spieler
 import turtle
 import editor
+import foreground
 
 class UI:
     def __init__(self, x, y):
@@ -70,6 +71,7 @@ class UI:
         wn.onkey(self.eventRechts, "Right")
         wn.onkey(self.eventZurueck, "Down")
         wn.onkey(self.switch, "space")
+        wn.onkey(foreground.laufe, "Return")
         wn.listen()
 
     def eventVor(self, a=0, b=0):
