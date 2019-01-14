@@ -64,31 +64,47 @@ class UI:
         self.minus1.onclick(self.eventDecreaseSpeed)
         self.minus2.onclick(self.eventDecreaseSpeed)
 
-    def eventVor(self, a, b):
+        wn = turtle.Screen()
+        wn.onkey(self.eventVor, "Up")
+        wn.onkey(self.eventLinks, "Left")
+        wn.onkey(self.eventRechts, "Right")
+        wn.onkey(self.eventZurueck, "Down")
+        wn.onkey(self.switch, "space")
+        wn.listen()
+
+    def eventVor(self, a=0, b=0):
         spieler.vor(1)
 
-    def eventZurueck(self, a, b):
+    def eventZurueck(self, a=0, b=0):
         spieler.zurueck(1)
 
-    def eventLinks(self, a, b):
+    def eventLinks(self, a=0, b=0):
         spieler.links()
 
-    def eventRechts(self, a, b):
+    def eventRechts(self, a=0, b=0):
         spieler.rechts()
 
-    def eventIncreaseSpeed(self, a, b):
+    def eventIncreaseSpeed(self, a=0, b=0):
         spieler.increaseSpeed()
 
-    def eventDecreaseSpeed(self, a, b):
+    def eventDecreaseSpeed(self, a=0, b=0):
         spieler.decreaseSpeed()
 
-    def stop(self, a, b):
+    def switch(self):
+        if self.paused:
+            self.goOn()
+        else:
+            self.stop()
+
+    def stop(self, a=0, b=0):
         self.paused = True
+        self.x = False
         self.switchPause()
         laby.paused = True
 
-    def goOn(self, a, b):
+    def goOn(self, a=0, b=0):
         self.paused = False
+        self.x = True
         self.switchPause()
         laby.paused = False
 

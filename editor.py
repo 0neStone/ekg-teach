@@ -1,5 +1,7 @@
 import turtle
 from background import laby, spieler
+from tkinter import *
+
 global selected
 selected = []
 def fill_black(x,y):
@@ -60,7 +62,7 @@ def set_start(x, y):
         print("Bitte wähle genau ein Feld aus")
         return
     elif len(selected) > 1:
-        print("Es kann nur einen Start geben")
+        print("Es kann nur einen Start geben, bitte wähle nur ein Feld aus")
         return
     x = selected[0][0]
     y = selected[0][1]
@@ -88,7 +90,7 @@ def moveTurtle(x, y):
         print("Bitte wähle genau ein Feld aus")
         return
     elif len(selected) > 1:
-        print("Es kann nur einen Start geben")
+        print("Es kann nur eine Turtle geben, bitte wähle nur ein Feld aus")
         return
     x = selected[0][0]
     y = selected[0][1]
@@ -103,7 +105,9 @@ whiteBorder(xWhite, yWhite)
 white = turtle.Turtle();white.up();white.shape("square");white.goto(xWhite,yWhite);white.onclick(erase);white.color("white")
 fakeTurtle = turtle.Turtle();fakeTurtle.up();fakeTurtle.shape("turtle");fakeTurtle.goto(x0-50,y0-50);fakeTurtle.onclick(moveTurtle)
 
-save = turtle.Turtle();save.up();save.right(90);save.goto(x0 - 50, y0);save.onclick(laby.saveMaze);save.pensize(3)
+save = turtle.Turtle();save.up();save.right(90);save.goto(x0 - 50, y0);save.onclick(laby.saveMaze);save.pensize(3)#;save.shape('blank')
+#ts = turtle.getscreen()
+#ts.getcanvas().postscript(file="data/save.png")
 save.goto(x0-60, y0-7);save.down();save.forward(2);save.left(90);save.forward(20); save.left(90);save.forward(2);save.up();save.goto(x0-50, y0);save.left(180);save.turtlesize(1.5, 1.5)
 
 

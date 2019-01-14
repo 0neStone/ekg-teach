@@ -1,8 +1,6 @@
 import turtle
 import time
 import random
-import numpy
-import csv
 
 class labyrinth:
     def __init__(self):
@@ -41,7 +39,7 @@ class labyrinth:
                     coord = coord.split(";")
                     self.setze("Ziel", int(coord[0]), int(coord[1]))
         except:
-            pass
+            beispiellabyrinth(1)
 
         self.border()
         self.gitter()
@@ -236,7 +234,7 @@ class player:
             time.sleep(self.sleeptime)
             if self.hinderniserkennung("vorne"):
                 pass
-                #print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
+                '''print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")'''
             else:
                 for x in range(0, steps):
                     self.schildie.forward(self.stepwidth)
@@ -339,12 +337,10 @@ class player:
         for coordinate in laby.besetzt:
             if vorderX == coordinate[0] and vorderY == coordinate[1]:
                 return True
-            else:
-                pass
         return False
 
     def ende(self):
-        while not self.getposition()[0] == self.endX and self.getposition()[1] == self.endY:
+        while self.getposition()[0] == self.endX and self.getposition()[1] == self.endY:
             self.sleeptime = 0.5
             self.links()
         return

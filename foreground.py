@@ -5,9 +5,6 @@ import ui
 while True:
     turtle.update()
     if not laby.paused:
-        if spieler.hinderniserkennung("links") and spieler.hinderniserkennung("rechts") and spieler.hinderniserkennung("vorne"):
-            spieler.links()
-            spieler.links()
         if spieler.hinderniserkennung("links"):
             if spieler.hinderniserkennung("rechts"):
                 if spieler.hinderniserkennung("vorne"):
