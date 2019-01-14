@@ -234,8 +234,9 @@ class player:
                 print("Sie haben ihr Ziel erreicht! Das Ziel liegt auf der", "rechten" if random.randint(0,1)==0 else "linken","Seite")
                 self.ende()
             time.sleep(self.sleeptime)
-            if self.hindernisserkennung("vorne"):
-                print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
+            if self.hinderniserkennung("vorne"):
+                pass
+                #print("Es liegt ein Stein vor dir, du kannst da nicht hingehen")
             else:
                 for x in range(0, steps):
                     self.schildie.forward(self.stepwidth)
@@ -245,8 +246,9 @@ class player:
 
     def zurueck(self, steps):
         time.sleep(self.sleeptime)
-        if self.hindernisserkennung("hinten"):
-            print("Es liegt ein Stein hinter dir, du kannst da nicht hingehen")
+        if self.hinderniserkennung("hinten"):
+            pass
+            #print("Es liegt ein Stein hinter dir, du kannst da nicht hingehen")
         else:
             for x in range(0, steps):
                 self.schildie.backward(self.stepwidth)
@@ -319,7 +321,7 @@ class player:
                 vorderY = eigenY + 1
         return [vorderX, vorderY]
 
-    def hindernisserkennung(self, dir):
+    def hinderniserkennung(self, dir):
         time.sleep(self.sleeptime)
         eigenfeld = self.getposition()
         eigenX = eigenfeld[0]
@@ -342,9 +344,10 @@ class player:
         return False
 
     def ende(self):
-        while True:
+        while not self.getposition()[0] == self.endX and self.getposition()[1] == self.endY:
             self.sleeptime = 0.5
             self.links()
+        return
 
     def getposition(self):
         x = self.schildie.xcor()
