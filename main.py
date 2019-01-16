@@ -7,5 +7,5 @@ x=0
 while True:
     turtle.update()
     if not laby.paused:
-        print(spieler.hinderniserkennung("vorne"))
-        foreground.laufe()
+        spieler.hinderniserkennung("vorne")
+        foreground.laufe2()

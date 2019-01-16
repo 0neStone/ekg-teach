@@ -144,6 +144,7 @@ class labyrinth:
 
 
     def border(self):
+        self.drawer.pensize(2)
         self.drawer.goto(self.x0, self.y0)
         self.drawer.down()
         self.drawer.color("black")
@@ -151,6 +152,7 @@ class labyrinth:
             self.drawer.forward(self.borderlength*self.stepwidth)
             self.drawer.left(90)
         self.drawer.up()
+        self.drawer.pensize(1)
 
     def gitter(self):
         self.drawer.goto(self.x0, self.y0)
@@ -293,7 +295,7 @@ class player():
                 vorderX = eigenX
                 vorderY = eigenY + 1
             elif self.richtung == 1: #rechts
-                vorderX = eigenX +1
+                vorderX = eigenX + 1
                 vorderY = eigenY
             elif self.richtung == 2: # unten
                 vorderX = eigenX
@@ -312,7 +314,7 @@ class player():
                 vorderX = eigenX
                 vorderY = eigenY + 1
             elif self.richtung == 3: # links
-                vorderX = eigenX +1
+                vorderX = eigenX + 1
                 vorderY = eigenY
         elif dir=="links":
             if self.richtung == 0: #oben
@@ -341,8 +343,8 @@ class player():
                 vorderX = eigenX
                 vorderY = eigenY + 1
         else:
-            return [0, 0]
-        return [vorderX, vorderY]
+            return [-10, -10]
+        return [int(vorderX), int(vorderY)]
 
     def hinderniserkennung(self, dir):
         time.sleep(self.sleeptime)
@@ -352,13 +354,14 @@ class player():
         vorderCoords = self.vorderCoord(eigenX, eigenY, dir)
         x = vorderCoords[0]
         y = vorderCoords[1]
+        #print(vorderCoords)
         if x>=0 and x<=laby.borderlength-1 and y>=0 and y<=laby.borderlength-1:
             self.schildie.goto(round(self.schildie.xcor(), 1), round(self.schildie.ycor(), 1))
-            return self.besetzt(vorderCoords[0], vorderCoords[1])
+            return self.test(vorderCoords[0], vorderCoords[1])
         else:
             return True
 
-    def besetzt(self, vorderX, vorderY):
+    def test(self, vorderX, vorderY):
         for coordinate in laby.besetzt:
             if vorderX == coordinate[0] and vorderY == coordinate[1]:
                 return True
@@ -397,8 +400,11 @@ class player():
         if self.sleeptime > 0.01:
             self.sleeptime -= 0.01
 
+
     def decreaseSpeed(self):
         self.sleeptime += 0.01
+
+
 
 
 
