@@ -22,14 +22,19 @@ class editor():
         self.white = turtle.Turtle();self.white.up();self.white.shape("square");self.white.goto(self.xWhite,self.yWhite);self.white.onclick(self.erase);self.white.color("white")
         self.fakeTurtle = turtle.Turtle();self.fakeTurtle.up();self.fakeTurtle.shape("turtle");self.fakeTurtle.goto(x0-50,y0-50);self.fakeTurtle.onclick(self.moveTurtle)
 
-        self.save = turtle.Turtle();self.save.up();self.save.right(90);self.save.goto(x0 - 50, y0);self.save.onclick(laby.saveMaze);self.save.pensize(3)#;save.shape('blank')
-        #ts = turtle.getscreen()
-        #ts.getcanvas().postscript(file="data/save.png")
-        self.save.goto(x0-60, y0-7);self.save.down();self.save.forward(2);self.save.left(90);self.save.forward(20); self.save.left(90);self.save.forward(2);self.save.up();self.save.goto(x0-50, y0);self.save.left(180);self.save.turtlesize(1.5, 1.5)
-
-        self.coords = turtle.onscreenclick(self.select)
+        screen = turtle.Screen()
+        savePNG = screen.register_shape("data/save.gif")
+        self.save = turtle.Turtle();self.save.up();self.save.right(90);self.save.goto(x0 - 50, y0);self.save.shape("data/save.gif")#;save.shape('blank')
+        self.coords = turtle.onscreenclick(self.saveAndSelect)
 
         self.selected = []
+
+    def saveAndSelect(self, x, y):
+        self.select(x, y)
+        if -125 < x < -95 and -295 < y < -270:
+            laby.saveMaze()
+
+
     def fill_black(self, x, y):
         if len(self.selected) == 0:
             print("Bitte wähle ein oder mehrere Felder aus")

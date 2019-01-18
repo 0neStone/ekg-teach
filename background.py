@@ -183,7 +183,7 @@ class labyrinth:
             self.drawer.write(y, font=("Arial", 10))
         self.drawer.up()
 
-    def saveMaze(self, x, y):
+    def saveMaze(self):
         print("Labyrinth gespeichert")
         with open("data/besetzt.txt", "w") as besetzt_file:
             for i in range(0,len(laby.besetzt)):
