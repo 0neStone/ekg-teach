@@ -404,10 +404,13 @@ class player():
     def decreaseSpeed(self):
         self.sleeptime += 0.01
 
-def go():
+def init(fun):
+    wn = turtle.Screen()
+    wn.onkey(fun, "Return")
+
+def update():
+    turtle.update()
     spieler.hinderniserkennung("vorne")
-
-
 
 
 
