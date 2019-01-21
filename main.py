@@ -1,12 +1,15 @@
-import foreground
 from ui import *
 import turtle
-from background import laby, spieler
+from background import *
 
-x=0
 while True:
     turtle.update()
-    #turtle.onscreenclick(editor.edit0r.saveMaze)
+    go()
     if not laby.paused:
-        spieler.hinderniserkennung("vorne")
-        foreground.laufe2()
+        if not spieler.hinderniserkennung("links"):
+            spieler.links()
+        elif not spieler.hinderniserkennung("rechts"):
+            spieler.rechts()
+        elif spieler.hinderniserkennung("vorne"):
+            spieler.umdrehen()
+        spieler.vor()

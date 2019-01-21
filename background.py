@@ -404,7 +404,8 @@ class player():
     def decreaseSpeed(self):
         self.sleeptime += 0.01
 
-
+def go():
+    spieler.hinderniserkennung("vorne")
 
 
 
