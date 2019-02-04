@@ -55,14 +55,14 @@ class UI:
         self.rueck.onclick(self.eventZurueck)
         self.links.onclick(self.eventLinks)
         self.rechts.onclick(self.eventRechts)
-        self.plus0.onclick(self.eventIncreaseSpeed)
-        self.plus1.onclick(self.eventIncreaseSpeed)
-        self.plus2.onclick(self.eventIncreaseSpeed)
-        self.plus3.onclick(self.eventIncreaseSpeed)
-        self.plus4.onclick(self.eventIncreaseSpeed)
-        self.minus0.onclick(self.eventIncreaseSpeed)
-        self.minus1.onclick(self.eventDecreaseSpeed)
-        self.minus2.onclick(self.eventDecreaseSpeed)
+        self.plus0.onclick(self.eventschneller)
+        self.plus1.onclick(self.eventschneller)
+        self.plus2.onclick(self.eventschneller)
+        self.plus3.onclick(self.eventschneller)
+        self.plus4.onclick(self.eventschneller)
+        self.minus0.onclick(self.eventschneller)
+        self.minus1.onclick(self.eventlangsamer)
+        self.minus2.onclick(self.eventlangsamer)
 
         wn = turtle.Screen()
         wn.onkey(self.eventVor, "Up")
@@ -70,6 +70,8 @@ class UI:
         wn.onkey(self.eventRechts, "Right")
         wn.onkey(self.eventZurueck, "Down")
         wn.onkey(self.switch, "space")
+        wn.onkey(self.eventschneller, "plus")
+        wn.onkey(self.eventlangsamer, "minus")
         wn.listen()
 
     def eventVor(self, a=0, b=0):
@@ -84,11 +86,11 @@ class UI:
     def eventRechts(self, a=0, b=0):
         spieler.rechts()
 
-    def eventIncreaseSpeed(self, a=0, b=0):
-        spieler.increaseSpeed()
+    def eventschneller(self, a=0, b=0):
+        spieler.schneller()
 
-    def eventDecreaseSpeed(self, a=0, b=0):
-        spieler.decreaseSpeed()
+    def eventlangsamer(self, a=0, b=0):
+        spieler.langsamer()
 
     def switch(self):
         if self.paused:

@@ -5,6 +5,7 @@ import random
 class labyrinth:
     def __init__(self):
         self.drawer = turtle.Turtle()
+        turtle.setup( width = 700, height = 750)
         self.drawer.hideturtle()
         self.drawer.speed(10)
         turtle.tracer(0, 0)
@@ -145,11 +146,11 @@ class labyrinth:
 
     def border(self):
         self.drawer.pensize(2)
-        self.drawer.goto(self.x0, self.y0)
+        self.drawer.goto(self.x0-1, self.y0-1)
         self.drawer.down()
         self.drawer.color("black")
         for x in range(0, 4):
-            self.drawer.forward(self.borderlength*self.stepwidth)
+            self.drawer.forward(self.borderlength*self.stepwidth+2)
             self.drawer.left(90)
         self.drawer.up()
         self.drawer.pensize(1)
@@ -396,12 +397,12 @@ class player():
             richtung = 3
         return richtung
 
-    def increaseSpeed(self):
-        if self.sleeptime > 0.01:
+    def schneller(self):
+        if self.sleeptime > 0.02:
             self.sleeptime -= 0.01
 
 
-    def decreaseSpeed(self):
+    def langsamer(self):
         self.sleeptime += 0.01
 
 def init(fun):
