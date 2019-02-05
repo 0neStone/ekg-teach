@@ -11,3 +11,7 @@ Der Spieler kann sich mit den Befehlen **vor(), zurück(), links()** und **recht
 
 ### Bewegung (noch nicht implementiert)
 Mit **position()** kann er seine koordinaten abfragen und mit **vorne()** abfragen, ob vor ihm ein baum steht.
+
+# Downloads für Programme
+[Python herunterladen (um Programm ausführen zu können)][https://www.python.org/ftp/python/3.7.2/python-3.7.2.exe]
+[Atom herunterladen (Um Programm zu bearbeiten)][https://atom.io/download/windows]
