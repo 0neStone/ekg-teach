@@ -13,7 +13,7 @@ Der Spieler kann sich mit den Befehlen **vor(), zurück(), links()** und **recht
 Mit **position()** kann er seine koordinaten abfragen und mit **vorne()** abfragen, ob vor ihm ein baum steht.
 
 # Downloads für Programme
-Hier können Programme die für das Ausführen dieses Packetes notwendig sind.
+Hier können Programme, die für das Ausführen dieses Packetes notwendig sind, herunterladen werden.
 
 
 [Python herunterladen (um Programm ausführen zu können)](https://www.python.org/ftp/python/3.7.2/python-3.7.2.exe)
